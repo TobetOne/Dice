@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dice Verify</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" user-scalable="no"/>
+    <script src="jquery-1.10.2.js" type="text/javascript"></script>
+    <script src="crypto.js" type="text/javascript"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            word-break: break-all;
+        }
+
+        body {
+            background-image: url("background.png");
+            background-size: contain;
+            width: 100%;
+            height: 100%;
+            padding: 2% 0;
+        }
+
+        .content {
+            background: url(Mask.png);
+            background-size: 100% 100%;
+            width: 72%;
+            height: 100%;
+            margin: 0 auto;
+        }
+
+        .wrap {
+            width: 100%;
+            margin: 0 auto;
+            /*min-width: 1300px;*/
+            padding: 6% 0;
+        }
+
+        .inputText {
+            font-size: 20px;
+            color: #FFFFFF;
+        }
+
+        #gameParam {
+            width: 50%;
+            margin: 4% auto;
+        }
+
+        .inputDiv {
+            margin-top: 4%;
+        }
+
+        .title {
+            font-size: 30px;
+            color: #FFFFFF;
+            letter-spacing: 0;
+            text-align: center;
+        }
+
+        .textS {
+            font-size: 16px;
+            color: #DADADA;
+        }
+
+        .formulaTitle {
+            color: #FFFFFF;
+            font-size: 20px;
+        }
+
+        .verInpt {
+            width: 100%;
+            height: 30px;
+            margin-top: 2%;
+            color: #9E9FA2;
+            border: 0px;
+            outline: none;
+            cursor: pointer;
+            background: #282B37;
+
+        }
+
+        .verifyBtn {
+            width: 500px;
+            height: 60px;
+            display: block;
+            margin: 2% auto 0;
+            font-size: 18px;
+            background: #ECC214;
+            border-radius: 10px;
+        }
+
+        .address {
+            margin: 2% 34%;
+            font-size: 14px;
+            color: #FFFFFF;
+        }
+
+        .formula {
+            margin-top: 1%;
+            color: #dadada;
+        }
+
+        @media screen and (max-width: 500px) {
+            body {
+                padding: 5% 0;
+            }
+
+            .content {
+                width: 88%;
+            }
+
+            #gameParam {
+                width: 90%;
+            }
+
+            .title {
+                font-size: 16px;
+            }
+
+            .inputText {
+                font-size: 14px;
+            }
+
+            .textS {
+                font-size: 12px;
+            }
+
+            .verInpt {
+                height: 20px;
+            }
+
+            .formulaTitle {
+                font-size: 14px;
+            }
+
+            .formula {
+                font-size: 12px;
+            }
+
+            .verifyBtn {
+                width: 150px;
+                height: 35px;
+                margin: 8% auto 0;
+                font-size: 16px;
+            }
+
+            .address {
+                margin: 2% 4%;
+                font-size: 12px;
+            }
+        }
+    </style>
+</head>
+
+<script>
+
+    //获取指定参数
+    function GetQueryString(name) {
+        var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)");
+        var r = window.location.search.substr(1).match(reg);
+        if (r != null) return unescape(r[2]);
+        return null;
+    }
+
+    function getHashCode(str) {
+        var h = 0, off = 0;
+        var len = str.length;
+        for (var i = 0; i < len; i++) {
+            h = 31 * h + str.charCodeAt(off++);
+            if (h > 0x7fffffff || h < 0x80000000) {
+                h = h & 0xffffffff;
+            }
+        }
+        return h;
+    };
+
+    //计算方法
+    function getBpResult() {
+        var param = document.getElementById("playerSignature").value.trim();
+        var hash = CryptoJS.SHA256(param);
+        var hashCode = Math.abs(getHashCode(hash.toString()));
+        var result = hashCode % 100 + 1;
+        $("#reslut").val(result);
+
+    }
+
+    //页面初始化参数
+    window.onload = function () {
+        $("#playerSeed").val(GetQueryString('playerSeed'));
+        $("#playerSignature").val(GetQueryString('playerSignature'));
+        $("#publicKey").val('EOS6CG8VwJ8G1iFn6x781PMojmfD7i4kqqzsgd1AjWwAaEz35QGhn');
+    };
+
+
+</script>
+
+<body>
+<div class="content">
+    <div class="wrap">
+        <div class="title">
+            <p>Tobet Dice Verify</p>
+        </div>
+        <form id="gameParam">
+            <div class="inputDiv">
+                <p class="inputText">玩家种子（Player Seed）:</p>
+                <p class="textS">GameId+Player+BetAmount+userSeedSrc+BetTime</p>
+                <input class="verInpt" id="playerSeed"/>
+            </div>
+            <div class="inputDiv">
+                <p class="inputText">玩家签名种子（Player Signature）:</p>
+                <p class="textS">Sign(GameId+Player+BetAmount+userSeedSrc+BetTime)</p>
+                <input class="verInpt" id="playerSignature"/>
+            </div>
+
+            <div class="inputDiv">
+                <p class="inputText">签名公钥（Public Key）:</p>
+                <input class="verInpt" id="publicKey"/>
+            </div>
+
+            <div class="inputDiv">
+                <p class="inputText">结果（reslut）:</p>
+                <input class="verInpt" disabled="disabled" id="reslut"/>
+            </div>
+            <div class="inputDiv">
+                <p class="formulaTitle">公式（formula）：</p>
+                <p class="formula"> hash = SHA256 (Player Signature);</p>
+                <p class="formula">hashCode = Math.abs (hash.hashcode);</p>
+                <p class="formula"> result = hashCode % 100 + 1;</p>
+            </div>
+        </form>
+        <button class="verifyBtn" onclick="getBpResult()">Verify</button>
+        <div class="address">
+            <p >源码地址：<a style="color: #FFFFFF" href="https://github.com/TobetOne/Dice" target="_blank">https://github.com/TobetOne/Dice</a></p>
+            </p>
+        </div>
+
+
+    </div>
+</div>
+</body>
+</html>
