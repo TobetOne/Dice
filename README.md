@@ -9,12 +9,12 @@
     seed_sign  = sign(seed);  
   2. 对随机种子hash（SH256）运算，结果转换为16进制  
     hash_hex = hex(sha256(seed_sign));   
-  3. 根据 hash_hex 进行 hashCode之后 除以100取余再加1得到结果 
+  3. 根据 hash_hex 截取前6位转换数字之后 除以100取余再加1得到结果 
   
 ```javascript
     hash = SHA256 (seed_sign);
-    hashCode = Math.abs (hash.hashcode);
-    result = hashCode % 100 + 1
+    hashSixInt = Math.abs (hexToInt(hash.substring(0,6)));
+    result = hashSixInt % 100 + 1
 ```
 ## 随机因子说明
    playerSeed = GameId+Player+BetAmount+UserSeedSrc+BetTime;  
