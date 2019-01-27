@@ -22,6 +22,6 @@
 *  Player:参与游戏的玩家账号;
 *  BetAmount：投注金额;
 *  UserSeedSrc:用户随机因子;
-*  BetTime:玩家的投注时间时间戳;
+*  BetTime:玩家的投注时间戳;
 ## 签名验证
    验证签名使用Tobet的公钥（EOS6CG8VwJ8G1iFn6x781PMojmfD7i4kqqzsgd1AjWwAaEz35QGhn），对seed_sign进行ecc签名验证，验证结果通过即可证明随机种子未被篡改。
