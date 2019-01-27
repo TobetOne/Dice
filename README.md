@@ -13,7 +13,7 @@
   
 ```javascript
     hash = SHA256 (seed_sign);
-    hashSixInt = Math.abs (hexToInt(hash.substring(0,6)));
+    hashSixInt = hexToInt(hash.substring(0,6));
     result = hashSixInt % 100 + 1
 ```
 ## 随机因子说明
