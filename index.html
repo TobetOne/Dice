@@ -163,7 +163,25 @@
         return null;
     }
 
-    function getHashCode(str) {
+    function hexToInt(hex) {
+        var chs = hex.toLowerCase().toCharArray();
+        if (chs.length < 8) {
+            var ret = 0;
+            for (var i = 0; i < chs.length; i++) {
+                if (chs[i] > '9') {
+                    // console.log(chs[i].charCodeAt(0) - 87);
+                    ret += (chs[i].charCodeAt(0) - 87) << (4 * (chs.length - 1 - i));
+                } else if (chs[i] > '0') {
+                    // console.log(chs[i].charCodeAt(0) - 48);
+                    ret += (chs[i].charCodeAt(0) - 48) << (4 * (chs.length - 1 - i));
+                }
+            }
+
+        }
+        return ret;
+    }
+
+   /* function getHashCode(str) {
         var h = 0, off = 0;
         var len = str.length;
         for (var i = 0; i < len; i++) {
@@ -173,14 +191,23 @@
             }
         }
         return h;
-    };
+    };*/
+
+    String.prototype.toCharArray = function () {
+        var arr = new Array();
+        for (var index = 0; index < this.length; index++) {
+            arr[index] = this.charAt(index);
+        }
+        return arr;
+
+    }
 
     //计算方法
     function getBpResult() {
         var param = document.getElementById("playerSignature").value.trim();
         var hash = CryptoJS.SHA256(param);
-        var hashCode = Math.abs(getHashCode(hash.toString()));
-        var result = hashCode % 100 + 1;
+        var hashSixInt = Math.abs(hexToInt(hash.toString().substring(0,6)));
+        var result = hashSixInt % 100 + 1;
         $("#reslut").val(result);
 
     }
@@ -204,12 +231,12 @@
         <form id="gameParam">
             <div class="inputDiv">
                 <p class="inputText">玩家种子（Player Seed）:</p>
-                <p class="textS">GameId+Player+BetAmount+userSeedSrc+BetTime</p>
+                <p class="textS">GameId+Player+BetAmount+UserSeedSrc+BetTime</p>
                 <input class="verInpt" id="playerSeed"/>
             </div>
             <div class="inputDiv">
                 <p class="inputText">玩家签名种子（Player Signature）:</p>
-                <p class="textS">Sign(GameId+Player+BetAmount+userSeedSrc+BetTime)</p>
+                <p class="textS">Sign(GameId+Player+BetAmount+UerSeedSrc+BetTime)</p>
                 <input class="verInpt" id="playerSignature"/>
             </div>
 
@@ -225,8 +252,8 @@
             <div class="inputDiv">
                 <p class="formulaTitle">公式（formula）：</p>
                 <p class="formula"> hash = SHA256 (Player Signature);</p>
-                <p class="formula">hashCode = Math.abs (hash.hashcode);</p>
-                <p class="formula"> result = hashCode % 100 + 1;</p>
+                <p class="formula">hashSixInt = Math.abs (hexToInt(hash.substring(0,6)));</p>
+                <p class="formula"> result = hashSixInt % 100 + 1;</p>
             </div>
         </form>
         <button class="verifyBtn" onclick="getBpResult()">Verify</button>
