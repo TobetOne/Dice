@@ -206,7 +206,7 @@
     function getBpResult() {
         var param = document.getElementById("playerSignature").value.trim();
         var hash = CryptoJS.SHA256(param);
-        var hashSixInt = Math.abs(hexToInt(hash.toString().substring(0,6)));
+        var hashSixInt =hexToInt(hash.toString().substring(0,6));
         var result = hashSixInt % 100 + 1;
         $("#reslut").val(result);
 
@@ -252,7 +252,7 @@
             <div class="inputDiv">
                 <p class="formulaTitle">公式（formula）：</p>
                 <p class="formula"> hash = SHA256 (Player Signature);</p>
-                <p class="formula">hashSixInt = Math.abs (hexToInt(hash.substring(0,6)));</p>
+                <p class="formula">hashSixInt = hexToInt(hash.substring(0,6));</p>
                 <p class="formula"> result = hashSixInt % 100 + 1;</p>
             </div>
         </form>
