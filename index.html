@@ -209,7 +209,7 @@
         var hash = CryptoJS.SHA256(param);
         var hashSixInt =hexToInt(hash.toString().substring(0,6));
         var result = hashSixInt % 100 + 1;
-        $("#reslut").val(result);
+        $("#result").val(result);
 
     }
 
@@ -248,7 +248,7 @@
 
             <div class="inputDiv">
                 <p class="inputText">结果（Result）:</p>
-                <input class="verInpt"  id="reslut"/>
+                <input class="verInpt" style="color: #FFCD00!important;" id="result"/>
             </div>
             <div class="inputDiv">
                 <p class="formulaTitle">公式（Formula）：</p>
